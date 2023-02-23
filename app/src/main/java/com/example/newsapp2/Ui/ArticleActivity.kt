@@ -7,9 +7,11 @@ import android.widget.ProgressBar
 import android.widget.TableLayout
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.api.ApiManager
 import com.example.newsapp.model.Response
 import com.example.newsapp.model.TabsDM
+import com.example.newsapp2.Adapter.ArticleAdapter
 import com.example.newsapp2.R
 import com.example.newsapp2.model.ArticleResponse
 import com.google.android.material.tabs.TabLayout
@@ -20,24 +22,30 @@ import retrofit2.Callback
 class ArticleActivity : AppCompatActivity() {
     lateinit var tabLayout: TabLayout
     lateinit var progressBar: ProgressBar
+    lateinit var articleRecycleView :RecyclerView
+    var adapter :ArticleAdapter= ArticleAdapter(listOf())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article)
         getTaps()
         initView()
+//        initListener()
     }
 
     fun initView() {
         tabLayout = findViewById(R.id.TapsLayout)
         progressBar = findViewById(R.id.ProgressBar)
+        articleRecycleView = findViewById(R.id.ArticleRecycleView)
+        articleRecycleView.adapter=adapter
 
     }
 
     fun initListener() {
-        tabLayout.setOnTabSelectedListener(object : OnTabSelectedListener {
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                val id = tab?.tag
-                getArticle(id.toString())
+                val id = tab?.tag as  String
+                getArticle(id)
+                Log.e( "onTabSelected: ",id )
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -45,9 +53,11 @@ class ArticleActivity : AppCompatActivity() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                TODO("Not yet implemented")
+                val id = tab?.tag as  String
+                getArticle(id)
             }
         })
+
     }
 
     fun getTaps() {
@@ -55,7 +65,7 @@ class ArticleActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Response>, response: retrofit2.Response<Response>) {
                 progressBar.isVisible = false
                 Log.e("onResponse: ", "${response.body()}")
-                if (response.body()?.code == null) {
+                if (response.code() in 200..300) {
                     showTaps(response.body()?.tabs!!)
                 }
 
@@ -77,7 +87,8 @@ class ArticleActivity : AppCompatActivity() {
                     call: Call<ArticleResponse>,
                     response: retrofit2.Response<ArticleResponse>
                 ) {
-                    TODO("Not yet implemented")
+                    progressBar.isVisible = false
+                adapter.changeData(response.body()?.articles!!)
                 }
 
                 override fun onFailure(call: Call<ArticleResponse>, t: Throwable) {

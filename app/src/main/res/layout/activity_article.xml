@@ -5,20 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Ui.ArticleActivity">
-<com.google.android.material.tabs.TabLayout
-    android:id="@+id/TapsLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
-    app:tabMode="scrollable"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/TapsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabMode="scrollable"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="10dp"
         android:id="@+id/ArticleRecycleView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TapsLayout" />
-
+        tools:listitem="@layout/item_article"
+        app:layout_constraintTop_toBottomOf="@+id/TapsLayout"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
     <ProgressBar
         android:id="@+id/ProgressBar"
         android:layout_width="wrap_content"

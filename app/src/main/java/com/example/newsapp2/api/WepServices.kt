@@ -10,12 +10,10 @@ interface WepServices {
     @GET("/v2/top-headlines/sources")
     fun getTabs(
         @Query("apiKey")key:String
-
     ):Call<Response>
     @GET("/v2/everything")
     fun getArtical(
         @Query("apiKey")key:String,
         @Query("sources")tab:String
-
     ):Call<ArticleResponse>
 }
